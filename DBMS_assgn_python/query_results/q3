@@ -1,0 +1,28 @@
+/*
+
+
+*/
+
+
+		with xz as 
+		(
+			select p_c1.cited_index, p_c2.index
+			from paper_cited as p_c1
+			left join paper_cited as p_c2
+			on p_c1.index= p_c2.cited_index
+			where p_c1.cited_index is not null and p_c2.index is not null
+			order by p_c1.cited_index
+		)
+		select xz.cited_index as X_index , xz.index  as Z_index, rp_v.title as z_title , rp_v.main_author as z_main_author, rp_v.abstract as z_abstract, rp_v.venue as z_venue, rp_v.year as z_year
+		from xz 
+		left join 
+					(	select rp.index, rp.title ,rp.main_author,rp.abstract ,v.venue , v.year
+						from researchpapers as rp 
+						left join rp_venues as v
+						on v.index= rp.index
+					) as rp_v
+		on rp_v.index= xz.index
+		order by xz.cited_index
+	
+	
+

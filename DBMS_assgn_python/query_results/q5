@@ -1,0 +1,27 @@
+with a_i as 
+(
+	select * 
+	from 
+	(
+		select rp.main_author as author,rp.index
+		from researchpapers as rp
+
+		union 
+
+		select rp_c.co_author as author, rp_c.index
+		from rp_coauthors as rp_c
+
+	) as a_i
+	order by a_i.index
+)
+select *
+from
+	(	select a_pairs.author1,a_pairs.author2, count(*) as counts
+		from 
+			(select a1.author as Author1, a2.author as Author2 , a1.index
+			from a_i as a1
+			cross join a_i as a2
+			where a1.index=a2.index and a1.author != a2.author and a1.author>=a2.author) as a_pairs
+		group by (a_pairs.author1,a_pairs.author2) 
+	) as a_p_2
+where a_p_2.counts>=2	

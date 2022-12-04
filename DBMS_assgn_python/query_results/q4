@@ -1,0 +1,7 @@
+SELECT p_c.cited_index, COUNT(*)
+FROM paper_cited AS p_c
+WHERE NOT (p_c.cited_index is null)
+GROUP BY p_c.cited_index
+ORDER BY COUNT(*) DESC
+LIMIT 20
+;
